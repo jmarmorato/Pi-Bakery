@@ -1,0 +1,9 @@
+{
+    "require": {
+        "jumbojett/openid-connect-php": "^0.9.10",
+        "vlucas/phpdotenv": "^5.5",
+        "twitter/bootstrap": "4.0.0",
+        "components/jquery": "^3.6",
+        "components/font-awesome": "^6.4"
+    }
+}

@@ -1,0 +1,11 @@
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^dashboard index.php?page=dashboard
+RewriteRule ^login index.php?page=login
+RewriteRule ^logout index.php?page=logout
+RewriteRule ^callback index.php?page=callback [QSA]
+RewriteRule ^callback/logout index.php?page=logged_out [QSA]
+RewriteRule ^pis/new index.php?page=new_pi [QSA]
+RewriteRule ^pis index.php?page=pis [QSA]
