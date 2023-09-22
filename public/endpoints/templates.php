@@ -1,6 +1,17 @@
 <?php
 
-echo view("Head");
+/*
+*	Take form data from /pis/new form and process
+*/
+
+require_once "../../app/init.php";
+
+session_start();
+
+if (!isset($_SESSION["account_id"])) {
+  header("HTTP/1.1 401 Unauthorized");
+  exit;
+}
 
 //Get the template parameters
 $templates = array_filter(scandir("/var/www/PiBakery/writable/templates/"), "parent_filter");
@@ -24,11 +35,4 @@ foreach ($templates as $template) {
 	}
 }
 
-echo view("New_Pi", array(
-	"images" => glob("/var/www/PiBakery/writable/images/*.img"),
-	"templates" => $return_templates
-));
-
-echo view("Foot");
-
-?>
+echo json_encode($return_templates);

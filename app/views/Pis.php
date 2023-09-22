@@ -21,7 +21,7 @@
           <th scope="row">
             <?php echo $pi["name"]; ?>
           </th>
-          <td>Online</td>
+          <td><?php echo $pi["status"]; ?></td>
           <td>
             <?php echo $pi["serial"]; ?>
           </td>

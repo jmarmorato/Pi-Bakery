@@ -1,0 +1,9 @@
+[
+	{
+		"internal_id": "kiosk_url",
+		"name": "Kiosk URL",
+		"type": "url",
+		"description": "The URL to be displayed",
+		"placeholder": "https://kiosk.company.net/home"
+	}
+]

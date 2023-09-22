@@ -21,6 +21,14 @@ class Pi
 			$statement->execute();
 			$result = $statement->fetchall(PDO::FETCH_ASSOC);
 			$statement->closeCursor();
+
+			for ($i = 0; $i<count($result); $i++) {
+				//Get the status of the pi
+				if (file_exists("/var/www/PiBakery/writable/provision/" . $result[$i]["serial"])) {
+					$result[$i]["status"] = "Provisioning";
+				}
+			}
+
 			return $result;
 		} catch (PDOException $e) {
 			echo "Unrecoverable Database Error";

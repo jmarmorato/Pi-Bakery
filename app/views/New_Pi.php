@@ -165,15 +165,16 @@
           </h5>
         </div>
         <div id="templateConfig" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-          <div class="card-body">
+          <div class="card-body" id="template_param">
+
             <div class="row">
               <div class="col-md-6 col-12">
                 <div class="form-group">
                   <label for="piName">Template</label>
-                  <select name="piTemplate" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                  <select onchange="selectTemplate(this.value)" name="piTemplate" class="custom-select mr-sm-2" id="templateSelectDropdown">
                     <option selected disabled>Choose...</option>
                     <?php foreach ($data["templates"] as $template): ?>
-                      <option value="<?php echo basename($template); ?>"><?php echo basename($template); ?></option>
+                      <option value="<?php echo basename($template["template_name"]); ?>"><?php echo $template["template_name"]; ?></option>
                     <?php endforeach; ?>
                   </select>
                   <small id="nameHelp" class="form-text text-muted">Chose the template to be deployed to the Pi.</small>
@@ -192,6 +193,9 @@
                 </div>
               </div>
             </div>
+
+            <div id="template_param_container"></div>
+
           </div>
         </div>
       </div>
