@@ -61,7 +61,29 @@ class Pi
 	
 	}
 
-	public static function new($name, $serial, $template, $image, $boot_net_type, $boot_net_ip, $boot_net_gateway, $os_net_type, $os_net_ip, $os_net_gateway)
+	public static function get_template_parameters($serial) {
+		try {
+			$db = new Database();
+			$db->connect();
+
+			$sql = "SELECT * FROM template_parameters WHERE serial=:serial;";
+
+			$statement = $db->db->prepare($sql);
+			$statement->bindParam(":serial", $serial);
+
+			$statement->execute();
+			$result = $statement->fetchall(PDO::FETCH_ASSOC);
+			$statement->closeCursor();
+
+			return $result;
+		} catch (PDOException $e) {
+			echo "Unrecoverable Database Error";
+			echo $e;
+			return false;
+		}
+	}
+
+	public static function new($name, $serial, $template, $image, $boot_net_type, $boot_net_ip, $boot_net_gateway, $os_net_type, $os_net_ip, $os_net_gateway, $templateParams)
 	{
 		try {
 			$db = new Database();
@@ -87,10 +109,27 @@ class Pi
 			$statement->bindParam(":main_net_ip", $os_net_ip);
 			$statement->bindParam(":main_net_gateway", $os_net_gateway);
 			$statement->bindParam(":token", $token);
-
 			$statement->execute();
 
 			$id = $db->db->lastInsertId();
+
+			$templateParams = json_decode($templateParams);
+
+			$sql = <<<'SQL'
+			INSERT INTO template_parameters (serial, p_key, p_value)
+			VALUES (:serial, :p_key, :p_value);
+		SQL;
+
+			$statement = $db->db->prepare($sql);
+
+
+			foreach ($templateParams as $param) {
+				$statement = $db->db->prepare($sql);
+				$statement->bindParam(":serial", $serial);
+				$statement->bindParam(":p_key", $param->key);
+				$statement->bindParam(":p_value", $param->value);
+				$statement->execute();
+			}
 
 			$statement->closeCursor();
 			return $id;
@@ -107,6 +146,19 @@ class Pi
 		try {
 			$db = new Database();
 			$db->connect();
+
+			$sql = "SELECT serial FROM pis WHERE id=:id;";
+			$statement = $db->db->prepare($sql);
+			$statement->bindParam(":id", $piId, PDO::PARAM_INT);
+			$statement->execute();
+			$serial_result = $statement->fetch();
+
+			var_dump($serial_result);
+
+			$sql = "DELETE FROM template_parameters WHERE serial=:serial;";
+			$statement = $db->db->prepare($sql);
+			$statement->bindParam(":serial", $serial_result["serial"]);
+			$statement->execute();
 
 			$sql = <<<'SQL'
 			DELETE FROM pis

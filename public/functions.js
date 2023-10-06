@@ -23,6 +23,7 @@ function templateParamInputBuilder(type, internalId, placeholder) {
 		input = document.createElement("input");
 		input.setAttribute("type", "url");
 		input.classList.add("form-control");
+		input.classList.add("templateDynamicFormElement");
 		input.setAttribute("placeholder", placeholder);
 		input.setAttribute("id", "template-param-" + internalId);
 		return input;
@@ -61,7 +62,7 @@ function selectTemplate(value) {
 						param_small.classList.add("form-text");
 						param_small.classList.add("text-muted");
 						param_small.innerHTML = template.params[i].description;
-						input = templateParamInputBuilder(template.params[i].type, template.params[i].internalId, template.params[i].placeholder)
+						input = templateParamInputBuilder(template.params[i].type, template.params[i].internal_id, template.params[i].placeholder)
 	
 						col_div.append(param_label);
 						col_div.append(input);
@@ -79,12 +80,25 @@ function selectTemplate(value) {
 	});
 }
 
+function submit_new_pi() {
 
+	const dynamicInputs = document.getElementsByClassName("templateDynamicFormElement");
+	var values = [];
 
+	for (var i = 0; i < dynamicInputs.length; i++) {
+		param = {
+			key : dynamicInputs[i].id,
+			value: dynamicInputs[i].value
+		}
 
+		values.push(param);
+	}
 
+	templateJson = JSON.stringify(values);
 
+	const jsonHiddenField = document.getElementById("templateParams");
+	jsonHiddenField.value = templateJson;
 
-
-
-
+	const form = document.getElementById("newPiForm");
+	form.submit();
+}

@@ -3,10 +3,17 @@
 source $1/$2
 
 logger "Begin provisioning process for device " $SERIAL
+logger $TEMPLATE
 
 function delete_provision () {
         #Delete the provision trigger file
         rm $1/$2
+}
+
+function on_error() {
+        delete_provision
+        #Unmount loop device
+        losetup --detach $device
 }
 
 #This command mounts the RaspberryPi OS img file to a loop device
@@ -17,7 +24,7 @@ device=$(losetup --show -f -P $IMGPATH)
 if [ ! $? -eq 0 ]
 then
 	echo "Failed to mount image to loop device"
-        delete_provision
+        on_error
 	exit 1000
 fi
 logger "Successfully mounted image to loop device " $device
@@ -28,7 +35,7 @@ mount "${device}p1" /media/boot
 if [ ! $? -eq 0 ]
 then
         logger "Failed to mount image boot partition to filesystem"
-        delete_provision
+        on_error
         exit 1001
 fi
 logger "Mounted image boot partition to filesystem"
@@ -39,7 +46,7 @@ mount "${device}p2" /media/root
 if [ ! $? -eq 0 ]
 then
         logger "Failed to mount image main partition to filesystem"
-        delete_provision
+        on_error
         exit 1003
 fi
 logger "Mounted image main partition to filesystem"
@@ -50,7 +57,7 @@ rm -rf /piboot/$SERIAL
 if [ ! $? -eq 0 ]
 then
         logger "Failed to delete existing Pi directory"
-        delete_provision
+        on_error
         exit 1004
 fi
 logger "Deleted the existing directory for device $SERIAL (if it exists)"
@@ -61,7 +68,7 @@ mkdir -p /piboot/$SERIAL
 if [ ! $? -eq 0 ]
 then
         logger "Failed to create new Pi directory"
-        delete_provision
+        on_error
         exit 1005
 fi
 logger "Created a new directory for device $SERIAL"
@@ -72,7 +79,7 @@ cp -rp /media/root/* /piboot/$SERIAL
 if [ ! $? -eq 0 ]
 then
         logger "Failed to copy root files top the Pi directory"
-        delete_provision
+        on_error
         exit 1005
 fi
 logger "Copied root files to the Pi directory"
@@ -83,7 +90,7 @@ cp -rp /media/boot/* /piboot/$SERIAL/boot/
 if [ ! $? -eq 0 ]
 then
         logger "Failed to copy boot files to the Pi directory"
-        delete_provision
+        on_error
         exit 1005
 fi
 logger "Copied boot files to the Pi directory"
@@ -94,7 +101,7 @@ ln -s /piboot/$SERIAL/boot/ /tftpboot/$SERIAL
 if [ ! $? -eq 0 ]
 then
         logger "Failed to link /tftpboot/<pi-serial> to /piboot/<serial>/boot"
-        delete_provision
+        on_error
         exit 1005
 fi
 logger "Linked /tftpboot/<pi-serial> to /piboot/<serial>/boot"
@@ -104,7 +111,7 @@ umount -f /media/root
 if [ ! $? -eq 0 ]
 then
         logger "Failed to unmount the Pi image root partition from the filesystem"
-        delete_provision
+        on_error
         exit 1005
 fi
 logger "Unmounted the Pi image root partition from the filesystem"
@@ -112,7 +119,7 @@ umount -f /media/boot
 if [ ! $? -eq 0 ]
 then
         logger "Failed to unmount the Pi image boot partition from the filesystem"
-        delete_provision
+        on_error
         exit 1005
 fi
 logger "Unmounted the Pi image boot partition from the filesystem"
@@ -122,7 +129,7 @@ losetup --detach $device
 if [ ! $? -eq 0 ]
 then
         logger "Failed to unmount loop device $device"
-        delete_provision
+        on_error
         exit 1005
 fi
 logger "Unmounted loop device " $device
@@ -133,7 +140,7 @@ logger "Building system templates"
 if [ ! $? -eq 0 ]
 then
         logger "Error building system templates"
-        delete_provision
+        on_error
         exit 1005
 fi
 
@@ -143,14 +150,16 @@ logger "Performing filesystem tasks"
 if [ ! $? -eq 0 ]
 then
         logger "Failed to perform filesystem tasks"
-        delete_provision
+        on_error
         exit 1005
 fi
+
+logger "$TEMPLATE/server_commands.sh"
 
 if [ -f "$TEMPLATE/server_commands.sh" ];
 then
         logger "Run the template's server_commands"
-        "$TEMPLATE/server_commands.sh" $SERIAL "$TEMPLATE"
+        ."$TEMPLATE/server_commands.sh" $SERIAL "$TEMPLATE"
 fi
 
 logger "Provision complete"

@@ -35,6 +35,8 @@ $boot_net_gateway=$pi["boot_net_gateway"];
 $image = $pi["image"];
 $template = $pi["template"];
 
+$template_params = Pi::get_template_parameters($serial);
+
 $vars = <<<VARS
 SERIAL="$serial"
 BOOTNETTYPE="$boot_net_type"
@@ -43,6 +45,13 @@ BOOTNETGATEWAY="$boot_net_gateway"
 IMGPATH="/var/www/PiBakery/writable/images/$image"
 TEMPLATE="/var/www/PiBakery/writable/templates/$template"
 VARS;
+
+foreach ($template_params as $param) {
+	$key = strtoupper(explode("template-param-", $param["p_key"])[1]);
+	$value = $param["p_value"];
+
+	$vars = $vars . "\n$key=$value";
+}
 
 file_put_contents(APPPATH . "/writable/provision/" . $serial, $vars);
 

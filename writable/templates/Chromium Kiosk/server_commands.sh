@@ -5,3 +5,6 @@ sed -i '/dtoverlay=vc4-kms-v3d/c\#dtoverlay=vc4-kms-v3d' /tftpboot/$1/config.txt
 logger \"$2/files/kiosk.desktop\" /piboot/$1/etc/xdg/autostart
 
 cp "$2/files/kiosk.desktop" /piboot/$1/etc/xdg/autostart
+
+logger $PISERIAL
+envsubst < /piboot/$1/etc/xdg/autostart > /piboot/$1/etc/xdg/autostart

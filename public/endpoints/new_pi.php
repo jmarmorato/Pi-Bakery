@@ -82,8 +82,10 @@ $os_net_type = $_POST["piOSNetworkRadios"];
 $os_net_ip = $_POST["piOSCidr"];
 $os_net_gateway = $_POST["piOSGateway"];
 
+$templateParams = $_POST["templateParams"];
+
 $pi_id = Pi::new($name, $serial, $template, $image, $boot_net_type, $boot_net_ip,
-	$boot_net_gateway, $os_net_type, $os_net_ip, $os_net_gateway);
+	$boot_net_gateway, $os_net_type, $os_net_ip, $os_net_gateway, $templateParams);
 
 require_once "provision_pi.php";
 

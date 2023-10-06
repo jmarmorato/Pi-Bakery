@@ -6,7 +6,7 @@
     New Pi
   </h1>
 
-  <form action="/endpoints/new_pi.php" method="post">
+  <form id="newPiForm" action="/endpoints/new_pi.php" method="post">
 
     <div id="accordion">
       <div class="card">
@@ -201,7 +201,9 @@
       </div>
     </div>
 
-    <button class="btn btn-primary mt-2">Submit</button>
+
+    <input type="hidden" name="templateParams" id="templateParams" />
+    <button type="button" onclick="submit_new_pi()" class="btn btn-primary mt-2">Submit</button>
 
   </form>
 
