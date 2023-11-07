@@ -172,7 +172,7 @@
                 <div class="form-group">
                   <label for="piName">Template</label>
                   <select onchange="selectTemplate(this.value)" name="piTemplate" class="custom-select mr-sm-2" id="templateSelectDropdown">
-                    <option selected disabled>Choose...</option>
+                    <option selected value="" disabled>Choose...</option>
                     <?php foreach ($data["templates"] as $template): ?>
                       <option value="<?php echo basename($template["template_name"]); ?>"><?php echo $template["template_name"]; ?></option>
                     <?php endforeach; ?>
@@ -184,7 +184,7 @@
                 <div class="form-group">
                   <label for="piName">Image</label>
                   <select name="piImage" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                    <option selected disabled>Choose...</option>
+                    <option selected value="" disabled>Choose...</option>
                     <?php foreach ($data["images"] as $image): ?>
                       <option value="<?php echo basename($image); ?>"><?php echo basename($image); ?></option>
                     <?php endforeach; ?>

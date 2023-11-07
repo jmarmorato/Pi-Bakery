@@ -23,9 +23,9 @@ $_SESSION["username"] = $username;
 $_SESSION["id_token"] = $oidc->getIdToken();
 
 if($first_login["first_login"]) {
-  header("Location: /dashboard?firstlogin=true");
+  header("Location: /pis?firstlogin=true");
 } else {
-  header("Location: /dashboard");
+  header("Location: /pis");
 }
 
 ?>

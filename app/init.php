@@ -44,20 +44,18 @@ require_once APPPATH . "/system/helpers.php";
 require_once APPPATH . "/vendor/autoload.php";
 
 /*
-*   Include internal classes
-*/
-
-require_once APPPATH . "/app/classes/Authentication.php";
-require_once APPPATH . "/app/classes/Database.php";
-
-require_once APPPATH . "/app/classes/Pi.php";
-/*
  * Load configuration file and class
  */
 $dotenv = Dotenv\Dotenv::createImmutable(realpath(__DIR__ . "/.."));
 $dotenv->load();
 
+/*
+*   Include internal classes
+*/
+require_once APPPATH . "/app/classes/Authentication.php";
 require_once APPPATH . "/app/classes/Configuration.php";
+require_once APPPATH . "/app/classes/Database.php";
+require_once APPPATH . "/app/classes/Pi.php";
 
 
 $url = Configuration::url()["base_url"];

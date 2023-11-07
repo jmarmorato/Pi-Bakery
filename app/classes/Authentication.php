@@ -36,7 +36,7 @@ class Authentication {
 	try {
 	    $this->oidc->authenticate();
 	} catch (Exception $e) {
-	    header("Location: /dashboard");
+	    header("Location: /pis");
 	    error_log($e);
 	    header("HTTP/1.1 500 Internal Server Error");
 	    exit;

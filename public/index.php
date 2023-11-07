@@ -17,6 +17,9 @@ if (isset($_GET["page"])) {
 		case "logout":
 			require_once APPPATH . "/app/logout.php";
 			return;
+		case "error":
+			require_once APPPATH . "/app/error.php";
+			return;
 	}
 
 	if (!isset($_SESSION["email"])) {
@@ -36,5 +39,5 @@ if (isset($_GET["page"])) {
 			break;
 	}
 } else {
-	header("Location: /dashboard");
+	header("Location: /pis");
 }
